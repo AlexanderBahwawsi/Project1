@@ -27,6 +27,7 @@ class Controller(QMainWindow, Ui_MainWindow):
         self.__status = not self.__status
         if not self.__status:
             self.label.raise_()
+            self.slider_Vol.setValue(0)
         else:
             self.ch_1.setHidden(False)
             self.ch_1.raise_()
@@ -50,7 +51,7 @@ class Controller(QMainWindow, Ui_MainWindow):
                 self.__channel += 1
             else:
                 self.__channel = self.MIN_CHANNEL
-        self.channel_visual(self.__channel)
+            self.channel_visual(self.__channel)
 
     def channel_down(self):
         if self.__status:
@@ -58,7 +59,7 @@ class Controller(QMainWindow, Ui_MainWindow):
                 self.__channel -= 1
             else:
                 self.__channel = self.MAX_CHANNEL
-        self.channel_visual(self.__channel)
+            self.channel_visual(self.__channel)
 
     def channel_visual(self, ch):
         if ch == 1:

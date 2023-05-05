@@ -27,9 +27,10 @@ class Controller(QMainWindow, Ui_MainWindow):
         self.__status = not self.__status
         if not self.__status:
             self.label.raise_()
-            self.slider_Vol.setValue(0)
-            self.__volume = 0
-            self.__channel = 1
+            self.slider_Vol.setValue(self.MIN_VOLUME)
+            self.__volume = self.MIN_VOLUME
+            self.__channel = self.MIN_CHANNEL
+            self.__muted = False
         else:
             self.ch_1.setHidden(False)
             self.ch_1.raise_()

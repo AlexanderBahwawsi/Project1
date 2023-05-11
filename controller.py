@@ -5,17 +5,20 @@ QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
 class Controller(QMainWindow, Ui_MainWindow):
+    #Set initial values
     MIN_VOLUME = 0
     MAX_VOLUME = 2
     MIN_CHANNEL = 1
     MAX_CHANNEL = 3
     def __init__(self, *args, **kwargs):
+        #set default values
         self.__status = False
         self.__muted = False
         self.__volume = self.MIN_VOLUME
         self.__channel = self.MIN_CHANNEL
         super().__init__(*args, **kwargs)
         self.setupUi(self)
+        #connect all the buttons
         self.button_Power.clicked.connect(lambda: self.power())
         self.button_Mute.clicked.connect(lambda: self.mute())
         self.button_ChannelUp.clicked.connect(lambda: self.channel_up())
@@ -24,24 +27,30 @@ class Controller(QMainWindow, Ui_MainWindow):
         self.button_VolDown.clicked.connect(lambda: self.volume_down())
 
     def power(self):
+        #switches the status of the power
         self.__status = not self.__status
+        #returns all values to default when power is off
         if not self.__status:
             self.label.raise_()
             self.slider_Vol.setValue(self.MIN_VOLUME)
             self.__volume = self.MIN_VOLUME
             self.__channel = self.MIN_CHANNEL
             self.__muted = False
+        #turns on the tv
         else:
             self.ch_1.setHidden(False)
             self.ch_1.raise_()
 
     def mute(self):
+        #changes mute status if tv is on
         if self.__status:
             self.__muted = not self.__muted
+            #disables volume buttons and puts slider to 0 when mute is on
             if self.__muted:
                 self.slider_Vol.setValue(0)
                 self.button_VolUp.setEnabled(False)
                 self.button_VolDown.setEnabled(False)
+            #enables the volume buttons and puts the slider back to the volume it was at
             else:
                 self.slider_Vol.setValue(self.__volume)
                 self.button_VolUp.setEnabled(True)
@@ -49,22 +58,29 @@ class Controller(QMainWindow, Ui_MainWindow):
 
 
     def channel_up(self):
+        #if the tv is on increase the channel
         if self.__status:
             if self.__channel != self.MAX_CHANNEL:
                 self.__channel += 1
+            #if the channel is at max changes to min channel
             else:
                 self.__channel = self.MIN_CHANNEL
+            #displays corresponding channel image
             self.channel_visual(self.__channel)
 
     def channel_down(self):
+        #if tv is on decrease the channel
         if self.__status:
             if self.__channel != self.MIN_CHANNEL:
                 self.__channel -= 1
+            #if the channel is at min change to max
             else:
                 self.__channel = self.MAX_CHANNEL
+            #display corresponding channel
             self.channel_visual(self.__channel)
 
     def channel_visual(self, ch):
+        #displays the corresponding image for each channel
         if ch == 1:
             self.ch_1.setHidden(False)
             self.ch_2.setHidden(True)
@@ -91,17 +107,15 @@ class Controller(QMainWindow, Ui_MainWindow):
             self.ch_4.raise_()
 
     def volume_up(self):
+        #if the tv is on increase the volume and adjust the slider
         if self.__status:
-            if self.__muted:
-                self.__muted = False
             if self.__volume != self.MAX_VOLUME:
                 self.__volume += 1
                 self.slider_Vol.setValue(self.__volume)
 
     def volume_down(self):
+        #if the tv is on decrease the volume and adjust the slider
         if self.__status:
-            if self.__muted:
-                self.__muted = False
             if self.__volume != self.MIN_VOLUME:
                 self.__volume -= 1
                 self.slider_Vol.setValue(self.__volume)

@@ -5,13 +5,13 @@ QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
 class Controller(QMainWindow, Ui_MainWindow):
-    #Set initial values
+    #Set default values
     MIN_VOLUME = 0
     MAX_VOLUME = 2
     MIN_CHANNEL = 1
     MAX_CHANNEL = 3
     def __init__(self, *args, **kwargs):
-        #set default values
+        #set initial values
         self.__status = False
         self.__muted = False
         self.__volume = self.MIN_VOLUME
@@ -76,7 +76,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             #if the channel is at min change to max
             else:
                 self.__channel = self.MAX_CHANNEL
-            #display corresponding channel
+            #display corresponding channel image
             self.channel_visual(self.__channel)
 
     def channel_visual(self, ch):

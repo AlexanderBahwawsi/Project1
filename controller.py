@@ -40,6 +40,8 @@ class Controller(QMainWindow, Ui_MainWindow):
             self.__volume = self.MIN_VOLUME
             self.__channel = self.MIN_CHANNEL
             self.__muted = False
+            self.button_VolUp.setEnabled(True)
+            self.button_VolDown.setEnabled(True)
         else:
             self.ch_1.setHidden(False)
             self.ch_1.raise_()

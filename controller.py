@@ -5,20 +5,23 @@ QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
 class Controller(QMainWindow, Ui_MainWindow):
-    #Set default values
+    """
+    Class that contains all the button functions and defines the default values
+    """
     MIN_VOLUME = 0
     MAX_VOLUME = 2
     MIN_CHANNEL = 1
     MAX_CHANNEL = 3
     def __init__(self, *args, **kwargs):
-        #set initial values
+        """
+        Sets initial values and connects all the buttons with their functions.
+        """
         self.__status = False
         self.__muted = False
         self.__volume = self.MIN_VOLUME
         self.__channel = self.MIN_CHANNEL
         super().__init__(*args, **kwargs)
         self.setupUi(self)
-        #connect all the buttons
         self.button_Power.clicked.connect(lambda: self.power())
         self.button_Mute.clicked.connect(lambda: self.mute())
         self.button_ChannelUp.clicked.connect(lambda: self.channel_up())
@@ -26,61 +29,66 @@ class Controller(QMainWindow, Ui_MainWindow):
         self.button_VolUp.clicked.connect(lambda: self.volume_up())
         self.button_VolDown.clicked.connect(lambda: self.volume_down())
 
-    def power(self):
-        #switches the status of the power
+    def power(self) -> None:
+        """
+        Turns the tv status on and off and resets all values to their default values when the tv is turned off.
+        """
         self.__status = not self.__status
-        #returns all values to default when power is off
         if not self.__status:
             self.label.raise_()
             self.slider_Vol.setValue(self.MIN_VOLUME)
             self.__volume = self.MIN_VOLUME
             self.__channel = self.MIN_CHANNEL
             self.__muted = False
-        #turns on the tv
         else:
             self.ch_1.setHidden(False)
             self.ch_1.raise_()
 
-    def mute(self):
-        #changes mute status if tv is on
+    def mute(self) -> None:
+        """
+        If the tv is on the status of mute is changed. When mute is on the slider is set to 0
+        and the volume buttons are disabled. When mute is off volume buttons are enabled and slider
+        returns to the value it was at before it was muted.
+        """
         if self.__status:
             self.__muted = not self.__muted
-            #disables volume buttons and puts slider to 0 when mute is on
             if self.__muted:
                 self.slider_Vol.setValue(0)
                 self.button_VolUp.setEnabled(False)
                 self.button_VolDown.setEnabled(False)
-            #enables the volume buttons and puts the slider back to the volume it was at
             else:
                 self.slider_Vol.setValue(self.__volume)
                 self.button_VolUp.setEnabled(True)
                 self.button_VolDown.setEnabled(True)
 
 
-    def channel_up(self):
-        #if the tv is on increase the channel
+    def channel_up(self) -> None:
+        """
+        If the tv is on the channel is increased and the corresponding channel image is displayed.
+        """
         if self.__status:
             if self.__channel != self.MAX_CHANNEL:
                 self.__channel += 1
-            #if the channel is at max changes to min channel
             else:
                 self.__channel = self.MIN_CHANNEL
-            #displays corresponding channel image
             self.channel_visual(self.__channel)
 
-    def channel_down(self):
-        #if tv is on decrease the channel
+    def channel_down(self) -> None:
+        """
+        If the tv is on the channel is decreased and the corresponding channel image is displayed.
+        """
         if self.__status:
             if self.__channel != self.MIN_CHANNEL:
                 self.__channel -= 1
-            #if the channel is at min change to max
             else:
                 self.__channel = self.MAX_CHANNEL
-            #display corresponding channel image
             self.channel_visual(self.__channel)
 
-    def channel_visual(self, ch):
-        #displays the corresponding image for each channel
+    def channel_visual(self, ch: int) -> None:
+        """
+        Displays the corresponding channel image and hides the other channels.
+        :param ch: Gets the channel that needs to be displayed
+        """
         if ch == 1:
             self.ch_1.setHidden(False)
             self.ch_2.setHidden(True)
@@ -106,15 +114,19 @@ class Controller(QMainWindow, Ui_MainWindow):
             self.ch_4.setHidden(False)
             self.ch_4.raise_()
 
-    def volume_up(self):
-        #if the tv is on increase the volume and adjust the slider
+    def volume_up(self) -> None:
+        """
+        If the tv is on, increases the volume and adjusts the slider accordingly.
+        """
         if self.__status:
             if self.__volume != self.MAX_VOLUME:
                 self.__volume += 1
                 self.slider_Vol.setValue(self.__volume)
 
-    def volume_down(self):
-        #if the tv is on decrease the volume and adjust the slider
+    def volume_down(self) -> None:
+        """
+        If the tv is on, decreases the volume and adjusts the slider accordingly.
+        """
         if self.__status:
             if self.__volume != self.MIN_VOLUME:
                 self.__volume -= 1
